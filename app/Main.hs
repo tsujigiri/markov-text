@@ -16,7 +16,9 @@ main = do
     putStrLn $ unwords $ take 140 $ generateText Nothing wordMap rng
 
 addToWordMap :: WordMap -> [String] -> WordMap
-addToWordMap oldMap (w1:w2:w3:wordList) = addToWordMap newMap (w2:w3:wordList)
+addToWordMap oldMap (w1:w2:w3:wordList)
+    | endsWithPunctuation w2 = addToWordMap oldMap (w3:wordList)
+    | otherwise = addToWordMap newMap (w2:w3:wordList)
     where newMap = Map.insertWith (++) (w1, w2) [w3] oldMap
 
 addToWordMap oldMap _ = oldMap
@@ -41,3 +43,6 @@ generateText (Just key) wordMap rng
           Just wordCount = fmap length words
           (randIndex, newRng) = randomR (0, wordCount - 1) rng
           Just nextWord = fmap (!! randIndex) words
+
+endsWithPunctuation :: String -> Bool
+endsWithPunctuation string = last string `notElem` ['a'..'z'] ++ ['A'..'Z']
