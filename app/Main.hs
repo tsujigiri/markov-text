@@ -3,7 +3,6 @@ module Main where
 import System.Environment (getArgs)
 import qualified Data.Map as Map
 import System.Random
-import Data.List (intercalate)
 
 type WordMap = Map.Map (String, String) [String]
 
@@ -14,7 +13,7 @@ main = do
     let wordLists = map words texts
     let wordMap = foldl addToWordMap Map.empty wordLists
     rng <- newStdGen
-    print $ intercalate " " $ take 140 $ generateText Nothing wordMap rng
+    putStrLn $ unwords $ take 140 $ generateText Nothing wordMap rng
 
 addToWordMap :: WordMap -> [String] -> WordMap
 addToWordMap oldMap (w1:w2:w3:wordList) = addToWordMap newMap (w2:w3:wordList)
