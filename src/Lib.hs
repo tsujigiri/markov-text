@@ -1,14 +1,18 @@
 module Lib (
-    addToWordMap,
-    generateText,
-    processWords,
-    joinWords
+    generate
     ) where
 
 import qualified Data.Map as Map
 import System.Random
 
 type WordMap = Map.Map (String, String) [String]
+
+generate :: [String] -> IO String
+generate texts = do
+    let wordLists = map processWords texts
+    let wordMap = foldl addToWordMap Map.empty wordLists
+    rng <- newStdGen
+    return . joinWords . take 100 $ generateText Nothing wordMap rng
 
 addToWordMap :: WordMap -> [String] -> WordMap
 addToWordMap oldMap (w1:w2:w3:wordList)
