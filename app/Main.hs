@@ -9,4 +9,9 @@ main = do
     args <- getArgs
     texts <- mapM readFile args
     rng <- newStdGen
-    putStrLn . take 100 $ generate rng texts
+    putStrLn . takeUntilFullStop $ generate rng texts
+
+takeUntilFullStop :: String -> String
+takeUntilFullStop (char:text)
+    | char `elem` ".?!" = [char]
+    | otherwise = char:(takeUntilFullStop text)
