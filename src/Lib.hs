@@ -7,12 +7,11 @@ import System.Random
 
 type WordMap = Map.Map (String, String) [String]
 
-generate :: [String] -> IO String
-generate texts = do
-    let wordLists = map processWords texts
-    let wordMap = foldl addToWordMap Map.empty wordLists
-    rng <- newStdGen
-    return . joinWords . take 100 $ generateText Nothing wordMap rng
+generate :: StdGen -> [String] -> String
+generate rng texts =
+    joinWords $ generateText Nothing wordMap rng
+    where wordLists = map processWords texts
+          wordMap = foldl addToWordMap Map.empty wordLists
 
 addToWordMap :: WordMap -> [String] -> WordMap
 addToWordMap oldMap (w1:w2:w3:wordList)
@@ -58,13 +57,13 @@ processWords (char:text)
 processWords [] = []
 
 isWordChar :: Char -> Bool
-isWordChar = (`elem` ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "'-$~%&/=*#+\\@")
+isWordChar = (`elem` ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "'-$~%&/=*#+\\@,;:")
 
 isWhitespace :: Char -> Bool
 isWhitespace = (`elem` " \t")
 
 isPunctuation :: Char -> Bool
-isPunctuation = (`elem` ".,!?;:")
+isPunctuation = (`elem` ".!?")
 
 isIgnored :: Char -> Bool
 isIgnored = (`elem` "\n\"<>()|[]_{}")
