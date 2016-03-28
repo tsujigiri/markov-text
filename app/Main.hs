@@ -2,7 +2,7 @@ module Main where
 
 import System.Environment (getArgs)
 import System.Random
-import Lib
+import MarkovText
 
 main :: IO ()
 main = do

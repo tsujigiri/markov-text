@@ -1,5 +1,5 @@
 import Test.Hspec
-import Lib
+import MarkovText
 import System.Random
 
 main = hspec $ do
