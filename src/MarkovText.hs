@@ -3,6 +3,7 @@ module MarkovText (
     ) where
 
 import qualified Data.Map as Map
+import qualified Data.Set as Set
 import System.Random
 
 type WordMap = Map.Map (String, String) [String]
@@ -57,16 +58,16 @@ processWords (char:text)
 processWords [] = []
 
 isWordChar :: Char -> Bool
-isWordChar = (`elem` ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "'-$~%&/=*#+\\@,;:")
+isWordChar = flip Set.member $ Set.fromList $ ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "'-$~%&/=*#+\\@,;:"
 
 isWhitespace :: Char -> Bool
-isWhitespace = (`elem` " \t")
+isWhitespace = flip Set.member $ Set.fromList " \t"
 
 isPunctuation :: Char -> Bool
-isPunctuation = (`elem` ".!?")
+isPunctuation = flip Set.member $ Set.fromList ".!?"
 
 isIgnored :: Char -> Bool
-isIgnored = (`elem` "\n\"<>()|[]_{}")
+isIgnored = flip Set.member $ Set.fromList "\n\"<>()|[]_{}"
 
 joinWords :: [String] -> String
 joinWords (word1:word2:words)
