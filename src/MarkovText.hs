@@ -58,13 +58,16 @@ processWords (char:text)
 processWords [] = []
 
 isWordChar :: Char -> Bool
-isWordChar = flip Set.member $ Set.fromList $ ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "'-$~%&/=*#+\\@,;:"
+isWordChar = isMemberOfCharSet $ ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "'-$~%&/=*#+\\@,;:"
 
 isWhitespace :: Char -> Bool
-isWhitespace = flip Set.member $ Set.fromList " \t"
+isWhitespace = isMemberOfCharSet " \t"
 
 isPunctuation :: Char -> Bool
-isPunctuation = flip Set.member $ Set.fromList ".!?"
+isPunctuation = isMemberOfCharSet ".!?"
+
+isMemberOfCharSet :: String -> Char -> Bool
+isMemberOfCharSet chars char = Set.member char $ Set.fromList chars
 
 isIgnored :: Char -> Bool
 isIgnored = flip Set.member $ Set.fromList "\n\"<>()|[]_{}"
