@@ -55,13 +55,13 @@ processWords (char:text)
 processWords [] = []
 
 isWordChar :: Char -> Bool
-isWordChar = isMemberOfCharSet $ ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "'-$~%&/=*#+\\@,;:"
+isWordChar = isMemberOfCharSet $ ['a'..'z'] ++ ['A'..'Z'] ++ ['0'..'9'] ++ "'-$~%&/=*#+\\@"
 
 isWhitespace :: Char -> Bool
 isWhitespace = isMemberOfCharSet " \t"
 
 isPunctuation :: Char -> Bool
-isPunctuation = isMemberOfCharSet ".!?"
+isPunctuation = isMemberOfCharSet ".!?,;:"
 
 isMemberOfCharSet :: String -> Char -> Bool
 isMemberOfCharSet chars char = Set.member char $ Set.fromList chars
