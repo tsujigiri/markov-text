@@ -14,4 +14,4 @@ main = do
 takeUntilFullStop :: String -> String
 takeUntilFullStop (char:text)
     | char `elem` ".?!" = [char]
-    | otherwise = char:(takeUntilFullStop text)
+    | otherwise = char : takeUntilFullStop text

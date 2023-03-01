@@ -4,6 +4,7 @@ module MarkovText (
 
 import qualified Data.Map as Map
 import qualified Data.Set as Set
+import Data.Maybe
 import System.Random
 
 type WordMap = Map.Map (String, String) [String]
@@ -23,7 +24,7 @@ addToWordMap oldMap (w1:w2:w3:wordList)
 addToWordMap oldMap _ = oldMap
 
 generateText :: Maybe (String, String) -> WordMap -> StdGen -> [String]
-generateText Nothing wordMap rng = w1:w2:(generateText nextKey wordMap newRng)
+generateText Nothing wordMap rng = w1 : w2 : generateText nextKey wordMap newRng
     where firstWords = Map.filterWithKey (\k _ -> (head . fst) k `elem` ['A'..'Z']) wordMap
           keyCount = length . Map.keys $ firstWords
           (randIndex, newRng) = randomR (0, keyCount - 1) rng :: (Int, StdGen)
@@ -31,8 +32,8 @@ generateText Nothing wordMap rng = w1:w2:(generateText nextKey wordMap newRng)
           nextKey = Just (w1, w2)
 
 generateText (Just key) wordMap rng
-    | words == Nothing = generateText Nothing wordMap rng
-    | otherwise = nextWord:(generateText nextKey wordMap newRng)
+    | isNothing words = generateText Nothing wordMap rng
+    | otherwise = nextWord : generateText nextKey wordMap newRng
     where words = Map.lookup key wordMap
           nextKey = if last lastWord `elem` ['a'..'z'] ++ ['A'..'Z'] then
                        Just (lastWord, nextWord)
@@ -45,12 +46,12 @@ generateText (Just key) wordMap rng
 
 processWords :: String -> [String]
 processWords (char:text)
-    | isWordChar char = word:(processWords (drop (length word - 1) text))
+    | isWordChar char = word : processWords (drop (length word - 1) text)
     | isWhitespace char = processWords $ dropWhile isWhitespace text
-    | isPunctuation char = [char]:(processWords text)
+    | isPunctuation char = [char] : processWords text
     | isIgnored char = processWords text
-    | otherwise = error $ [char] ++ " not known"
-    where word = char:(takeWhile isWordChar text)
+    | otherwise = error $ char : " not known"
+    where word = char : takeWhile isWordChar text
 
 processWords [] = []
 
